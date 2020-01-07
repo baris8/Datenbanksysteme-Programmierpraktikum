@@ -1,0 +1,216 @@
+.open projekt3.db
+
+PRAGMA auto_vacuum = 1;
+PRAGMA automatic_index = 1;
+PRAGMA case_sensitive_like = 0;
+PRAGMA defer_foreign_keys = 0;
+PRAGMA encoding = "UTF-8";
+PRAGMA foreign_keys = 1;
+PRAGMA ignore_check_constraints = 0;
+PRAGMA journal_mode = WAL;
+PRAGMA query_only = 0;
+PRAGMA recursive_triggers = 1;
+PRAGMA reverse_unordered_selects = 0;
+PRAGMA secure_delete = 0;
+PRAGMA synchronous = NORMAL;
+
+
+CREATE TABLE Benutzer(
+	EMail text, 
+	Passwort text,
+	Vorname text,
+	Nachname text, 
+
+	constraint check_EMail check(glob('*@*.*', EMail)), 
+	constraint check_EMailZ check(length(substr(EMail, instr(EMail, '.') + 1)) > 0 AND NOT glob('*[^a-zA-Z]*', substr(EMail, instr(EMail, '.') + 1))),
+	constraint check_EMailY check(length(substr(EMail, instr(EMail, '@') + 1, length(EMail) - instr(EMail, '.') - 1))>0 AND 
+									NOT glob('*[^a-zA-Z]*', substr(EMail, instr(EMail, '@') + 1, length(EMail) - instr(EMail, '.') - 1))),
+	constraint check_EMailX check(length(substr(EMail, 1, instr(EMail, '@') - 1))>0 AND NOT glob('*[^a-zA-Z]*', substr(EMail, instr(EMail, '.') + 1))),
+	constraint check_Passwort check(length(Passwort) > 5 AND glob('*[A-Z]*', Passwort) AND glob('*[0-9]*', Passwort)),
+	constraint check_Vorname check(length(Vorname) > 0 AND NOT glob('*[0-9]*', Vorname) AND NOT glob('*[^a-zA-Z]*',Vorname)),
+	constraint check_Nachname check(length(Nachname) > 0 AND NOT glob('*[0-9]*', Nachname) AND NOT glob('*[^a-zA-Z]*', Nachname)),
+
+	PRIMARY KEY (EMail)
+);
+
+CREATE TABLE Autor(
+	EMail text,
+	Preis double(10, 2),
+	Pseudonym text,
+	Avatar blob,
+
+	constraint check_text check(length(EMail) > 0),
+	constraint check_preis check(Preis >= 0),
+	constraint check_Pseudonym check(length(Pseudonym) > 0),
+	
+	PRIMARY KEY (EMail), 
+
+	FOREIGN KEY (EMail) REFERENCES Benutzer(EMail)
+);
+
+CREATE TABLE Transaktion(
+	tid integer,
+	EMailA text,
+	EMailB text,
+	Zweck text,
+	Betrag double(10, 2),
+	Datum date,
+	Zahlungsmittelwahl text collate nocase ,
+	Gutscheincode text,
+	
+	constraint check_EMails check((length(EMailA) > 0) AND (length(EMailB) > 0))
+	constraint check_Zweck check(length(Zweck) > 0),
+	constraint check_date check(glob('[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]', Datum)),
+	constraint check_Zahlungsmittelwahl check(length(Zahlungsmittelwahl) > 0 
+				AND (Zahlungsmittelwahl IN ('paypal', 'rechnung', 'kreditkarte', 'paysafe'))),
+	constraint check_Betrag check(Betrag > 0),
+	
+	PRIMARY KEY (tid), 
+
+	FOREIGN KEY (EMailA) REFERENCES Autor(EMail),
+	FOREIGN KEY (EMailB) REFERENCES Benutzer(EMail)	
+);
+
+CREATE TABLE Seite(
+	sid integer,
+	EMail text,
+	Datum date,
+	Nummer integer,
+	Typ text collate nocase,
+
+	constraint check_EMail check(length(EMail) > 0), 
+	constraint check_datum check(glob('[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]', Datum)),
+	constraint check_Nummer check(Nummer > 0),
+	constraint check_typ check(Typ IN ('private', 'public')),
+	
+	PRIMARY KEY (sid), 
+
+	FOREIGN KEY (EMail) REFERENCES Autor(EMail)
+);
+
+CREATE TRIGGER tagebuchPreis AFTER INSERT ON Autor 
+WHEN new.Preis > 0 AND new.Preis < 0
+BEGIN 
+	UPDATE Autor SET Preis = 0 
+	WHERE Preis = new.Preis;
+END;
+
+CREATE TRIGGER psen AFTER UPDATE ON Autor
+WHEN (SELECT sid FROM seite WHERE seite.email = new.EMail and seite.typ = 'private') IS NULL AND new.Preis > 0
+BEGIN
+	UPDATE Autor SET Preis = 0
+	WHERE EMail = new.EMail;
+END;
+
+
+CREATE TRIGGER MaxEineSeiteProTag BEFORE INSERT ON Seite BEGIN
+	SELECT CASE 
+		WHEN (SELECT Seite.sid From Seite WHERE Seite.EMail = new.EMail AND (new.Datum = Seite.Datum)) IS NOT NULL
+		THEN RAISE(ABORT, "Pro Tag darf ein Autor nur 1 Seite erstellen!") 
+	END;
+END;
+
+CREATE TABLE Eintrag(
+	eid integer,
+	sid integer, 
+	Titel text,
+	Uhrzeit datetime,
+	Text text,
+	
+	constraint check_sidNotNULL check(sid not null), 
+	constraint check_titel check(length(Titel) > 0),
+	constraint check_uhrzeit check(glob('[0-9][0-9]:[0-9][0-9]', Uhrzeit)),
+	constraint check_text check(length(Text) > 0),
+
+	PRIMARY KEY (eid),
+ 
+	FOREIGN KEY (sid) REFERENCES Seite(sid)
+);
+
+CREATE TABLE Bild(
+	bid integer,
+	eid integer, 
+	Bild blob,
+	
+	constraint check_eidNotNULL check(eid not null), 
+	
+	PRIMARY KEY (bid),
+	
+	FOREIGN KEY (eid) REFERENCES Eintrag(eid)
+);
+
+CREATE TABLE Tag(
+	Tag text collate nocase,
+
+	constraint check_tag check(length(Tag) > 0 AND NOT glob('*[0-9]*', tag)),
+	
+	PRIMARY KEY (Tag)
+);
+
+CREATE TABLE GPS(
+	gid integer,
+	Laengengrad double check(length(Laengengrad) > 0),
+	Breitengrad double check(length(Breitengrad) > 0),
+
+	PRIMARY KEY (gid)
+);
+
+CREATE TABLE Benutzer_bewertet_Autor(
+	EMailB text, 
+	EMailA text,
+	Benotung integer,
+	Text text,
+	
+	constraint check_emails check(EMailA != EMailB),
+	constraint check_benotung check(0 < Benotung < 6 AND Benotung not null),
+	constraint check_text check(length(Text) > 0),
+	
+	PRIMARY KEY (EMailB, EMailA),
+
+	FOREIGN KEY (EMailB) REFERENCES Benutzer(EMail),
+	FOREIGN KEY (EMailA) REFERENCES Autor(EMail)
+);
+
+CREATE TABLE Benutzer_abonniert_Autor(
+	EMailB text,
+	EMailA text,
+	
+	constraint check_email check(EMailA != EMailB),
+	
+	PRIMARY KEY (EMailB, EMailA),
+
+	FOREIGN KEY (EMailB) REFERENCES Benutzer(EMail),
+	FOREIGN KEY (EMailA) REFERENCES Autor(EMail)
+);
+
+CREATE TABLE Autor_empfiehlt_Autor(
+	EMailB text,
+	EMailA text,
+	
+	constraint check_email check(EMailA != EMailB),
+	
+	PRIMARY KEY (EMailB, EMailA),
+
+	FOREIGN KEY (EMailB) REFERENCES Autor(EMail),
+	FOREIGN KEY (EMailA) REFERENCES Autor(EMail)
+);
+
+CREATE TABLE Bild_setzt_Tag(
+	bid integer,
+	Tag text,
+	
+	PRIMARY KEY (bid, Tag),
+	
+	FOREIGN KEY (bid) REFERENCES Bild(bid),
+	FOREIGN KEY (Tag) REFERENCES Tag(Tag)
+);
+
+CREATE TABLE Bild_hat_GPS(
+	bid integer,
+	gid integer,
+
+	PRIMARY KEY (bid, gid),
+
+	FOREIGN KEY (bid) REFERENCES Bild(bid),
+	FOREIGN KEY (gid) REFERENCES GPS(gid)
+);

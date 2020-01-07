@@ -1,0 +1,89 @@
+--1.
+
+
+SELECT Tag, COUNT(Tag) as Anzahl FROM Bild_setzt_Tag 
+
+GROUP BY Tag 
+
+ORDER BY Anzahl 
+DESC 
+LIMIT 2;
+
+
+--2. Hier war ich mir nicht sicher wegen der Beschreibung des Textes also 
+--   gebe ich absteigend sortiert nach dem verdienst alle Autoren aus, 
+--   falls man nur die Person mit dem Meisten verdienst haben will, dann kann man nach DESC 
+--   noch LIMIT 1 Hinzufügen
+
+SELECT Vorname, Nachname, EMail, sum(Betrag) as Verdienst 
+FROM Benutzer, Transaktion
+
+WHERE Benutzer.EMail = Transaktion.EMailA 
+
+GROUP BY Vorname 
+
+ORDER BY Verdienst DESC;
+
+
+
+--3. 
+
+
+SELECT Eintrag.* FROM Eintrag, Seite, Benutzer_bewertet_Autor 
+
+WHERE Seite.sid = Eintrag.sid 
+
+AND Titel GLOB '*Silvester in London*' 
+
+GROUP BY Benutzer_bewertet_Autor.EMailA 
+
+HAVING avg(Benutzer_bewertet_Autor.Benotung) >= 4;
+
+
+
+
+--4. Im Text steht zwar Tagebücher, aber ich habe mal angenommen, 
+-- dass damit die Einträge gemeint sind die Bilder haben die am Äquator liegen
+ 
+
+SELECT Eintrag.* FROM Eintrag, GPS, Bild, Bild_hat_GPS
+
+WHERE 
+GPS.Breitengrad = 0.0 
+AND 
+GPS.gid = Bild_hat_GPS.gid 
+AND 
+Bild_hat_GPS.bid = Bild.bid 
+AND 
+Bild.eid = Eintrag.eid;
+
+
+
+--5.
+
+
+SELECT Benutzer.Vorname, Benutzer.Nachname, Benutzer.EMail 
+
+FROM (
+SELECT EMail, Typ, Count(Typ) as Anzahl FROM Seite
+	
+	GROUP BY EMail, Typ
+	
+	HAVING (Anzahl >= 3 AND Typ = 'public')
+) as Zusammen, Benutzer
+
+WHERE Benutzer.EMail = Zusammen.EMail 
+
+EXCEPT
+
+SELECT Benutzer.Vorname, Benutzer.Nachname, Benutzer.EMail 
+
+FROM (
+SELECT EMail, Typ, Count(Typ) as Anzahl FROM Seite
+	
+	GROUP BY EMail, Typ
+	
+	HAVING (Typ = 'private')
+) as Zusammen, Benutzer
+
+WHERE Benutzer.EMail = Zusammen.EMail;

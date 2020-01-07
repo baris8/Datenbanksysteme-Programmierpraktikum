@@ -1,0 +1,108 @@
+
+INSERT INTO Benutzer Values("bauec@hhu.de", "123456aA", "Baris", "Uectas");
+INSERT INTO Benutzer Values("lameh@hhu.de", "asd123A", "Lars", "Mehnert");
+INSERT INTO Benutzer Values("kigoe@hhu.de", "lsadklA2", "Goekhan", "Kiziltan");
+INSERT INTO Benutzer Values("cantu@hhu.de", "as51A51", "Yunus", "Cantuerk");
+INSERT INTO Benutzer Values("kleini@hhu.de", "asdnkJ8", "Nils", "Klein");
+INSERT INTO Benutzer Values("alga@hhu.de", "sdahaA1s", "Gabriel", "Alves");
+
+INSERT INTO Autor Values("bauec@hhu.de", 1.00, "Rayleigh8", null);
+INSERT INTO Autor Values("kleini@hhu.de", 112.000, "Armas", null);
+INSERT INTO Autor Values("lameh@hhu.de", 14.550, "DiggeHummel", null);
+
+INSERT INTO Transaktion Values(0, "bauec@hhu.de", "cantu@hhu.de", "Zweck", 10.0, '2018-11-06 18:18:18', "paypal", null);
+INSERT INTO Transaktion Values(1, "bauec@hhu.de", "lameh@hhu.de", "Zweck", 15.0, '2018-11-05 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(2, "bauec@hhu.de", "kigoe@hhu.de", "Zweck", 12.0, '2018-11-05 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(3, "kleini@hhu.de", "lameh@hhu.de", "Zweck", 22.0, '2018-11-02 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(4, "bauec@hhu.de", "alga@hhu.de", "Zweck", 13.0, '2018-11-05 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(5, "kleini@hhu.de", "lameh@hhu.de", "Zweck", 5.0, '2018-11-02 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(6, "lameh@hhu.de", "kleini@hhu.de", "Zweck", 7.0, '2018-11-05 18:18:18', "PayPal", null);
+INSERT INTO Transaktion Values(7, "kleini@hhu.de", "lameh@hhu.de", "Zweck", 20, '2018-11-02 18:18:18', "PayPal", null);
+
+INSERT INTO Seite Values(0, "bauec@hhu.de", "2018-11-06", 1, "private");
+INSERT INTO Seite Values(1, "bauec@hhu.de", "2018-11-07", 1, "privAte");
+INSERT INTO Seite Values(2, "bauec@hhu.de", "2018-11-08", 1, "private");
+INSERT INTO Seite Values(3, "bauec@hhu.de", "2018-11-09", 1, "puBlic");
+INSERT INTO Seite Values(4, "bauec@hhu.de", "2018-11-10", 1, "public");
+INSERT INTO Seite Values(5, "bauec@hhu.de", "2018-11-11", 1, "public");
+INSERT INTO Seite Values(6, "bauec@hhu.de", "2018-11-12", 1, "PUBLIC");
+INSERT INTO Seite Values(7, "kleini@hhu.de", "2018-11-10", 1, "private");
+INSERT INTO Seite Values(8, "kleini@hhu.de", "2018-11-11", 1, "public");
+INSERT INTO Seite Values(9, "lameh@hhu.de", "2018-11-12", 1, "public");
+INSERT INTO Seite Values(10, "lameh@hhu.de", "2018-11-13", 1, "public");
+INSERT INTO Seite Values(11, "lameh@hhu.de", "2018-11-14", 1, "public");
+INSERT INTO Seite Values(12, "lameh@hhu.de", "2018-11-15", 1, "public");
+
+
+INSERT INTO Eintrag Values(0, 0, "Datenbanken", '18:13', "Hallo heute mache ich mein Projekt");
+INSERT INTO Eintrag Values(1, 0, "Datenbanken 2", '19:16', "Hier gehts weiter");
+INSERT INTO Eintrag Values(2, 1, "Rechnernetze", '18:13', "Ich schreibe einen WebServer in Java");
+INSERT INTO Eintrag Values(3, 1, "Rechnernetze 2", '18:14', "Ich komme nicht weiter ");
+INSERT INTO Eintrag Values(4, 2, "Rechnernetze 3", '18:13', "Der Socket schließt sich und ich kann nichts dagegen tun!");
+INSERT INTO Eintrag Values(5, 3, "Training", '18:13', "Heute war ich trainiern!");
+INSERT INTO Eintrag Values(6, 4, "Datenbanken", '18:13', "Das ist schön!");
+INSERT INTO Eintrag Values(7, 7, "Ausbildung", '00:00', "Ich kann nicht schlafen");
+INSERT INTO Eintrag Values(8, 3, "Geheimnis", '20:24', "Ich mag RennrŠder!");
+INSERT INTO Eintrag Values(9, 4, "Bachelor-Arbeit", '18:13', "Ich will meine Bachelorarbeit erledigen...");
+INSERT INTO Eintrag Values(10, 4, "Silvester in London", '18:13', "London ist schšn");
+INSERT INTO Eintrag Values(11, 4, "2018 Silvester in London 2019", '18:13', "Astonishing");
+
+INSERT INTO Bild Values(1, 2, null);
+INSERT INTO Bild Values(2, 3, null);
+INSERT INTO Bild Values(3, 4, null);
+INSERT INTO Bild Values(4, 1, null);
+INSERT INTO Bild Values(5, 2, null);
+
+INSERT INTO Tag Values("HHU");
+INSERT INTO Tag Values("Rechnernetze");
+INSERT INTO Tag Values("Datenbanken");
+INSERT INTO Tag Values("Projekt");
+INSERT INTO Tag Values("SQL");
+
+INSERT INTO GPS Values(0, -13.00000, 64.00000002);
+INSERT INTO GPS Values(1, 45.00000, 21.05423);
+INSERT INTO GPS Values(2, -2.000089, 0.0);
+INSERT INTO GPS Values(3, -13.0000550, 64.00000002);
+INSERT INTO GPS Values(4, -13.00000888, 64.0440000002);
+INSERT INTO GPS Values(5, 0.0, 64.0440000002);
+
+INSERT INTO Benutzer_bewertet_Autor Values("alga@hhu.de", "bauec@hhu.de", 5, "Du bist super!");
+INSERT INTO Benutzer_bewertet_Autor Values("kleini@hhu.de", "bauec@hhu.de", 5, "Du bist Wahnsinn!");
+INSERT INTO Benutzer_bewertet_Autor Values("kigoe@hhu.de", "bauec@hhu.de", 5, "Fantastischer Autor!");
+INSERT INTO Benutzer_bewertet_Autor Values("lameh@hhu.de", "bauec@hhu.de", 5, "Wer ist JK ROLLING");
+INSERT INTO Benutzer_bewertet_Autor Values("alga@hhu.de", "lameh@hhu.de", 2, "Net so intressant.");
+INSERT INTO Benutzer_bewertet_Autor Values("bauec@hhu.de", "lameh@hhu.de", 1, "Laaaangweilig.");
+INSERT INTO Benutzer_bewertet_Autor Values("kleini@hhu.de", "lameh@hhu.de", 5, "Einfach Wow");
+INSERT INTO Benutzer_bewertet_Autor Values("lameh@hhu.de", "kleini@hhu.de", 3, "Intressant.");
+
+INSERT INTO Benutzer_abonniert_Autor Values("bauec@hhu.de", "lameh@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("kleini@hhu.de", "lameh@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("alga@hhu.de", "lameh@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("lameh@hhu.de", "bauec@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("kleini@hhu.de", "bauec@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("kigoe@hhu.de", "bauec@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("cantu@hhu.de", "bauec@hhu.de");
+INSERT INTO Benutzer_abonniert_Autor Values("bauec@hhu.de", "kleini@hhu.de");
+
+INSERT INTO Autor_empfiehlt_Autor Values("bauec@hhu.de", "lameh@hhu.de");
+INSERT INTO Autor_empfiehlt_Autor Values("kleini@hhu.de", "bauec@hhu.de");
+INSERT INTO Autor_empfiehlt_Autor Values("bauec@hhu.de", "kleini@hhu.de");
+INSERT INTO Bild_setzt_Tag Values("1", "HHU");
+INSERT INTO Bild_setzt_Tag Values("1", "SQL");
+INSERT INTO Bild_setzt_Tag Values("1", "Projekt");
+INSERT INTO Bild_setzt_Tag Values("2", "HHU");
+INSERT INTO Bild_setzt_Tag Values("2", "Datenbanken");
+INSERT INTO Bild_setzt_Tag Values("2", "Rechnernetze");
+INSERT INTO Bild_setzt_Tag Values("3", "HHU");
+INSERT INTO Bild_setzt_Tag Values("4", "Datenbanken");
+INSERT INTO Bild_setzt_Tag Values("5", "Rechnernetze");
+
+INSERT INTO Bild_hat_GPS Values(1, 1);
+INSERT INTO Bild_hat_GPS Values(2, 2);
+INSERT INTO Bild_hat_GPS Values(3, 5);
+INSERT INTO Bild_hat_GPS Values(4, 5);
+INSERT INTO Bild_hat_GPS Values(5, 5);
+
+UPDATE Autor Set Preis = 20.00 WHERE EMail = "bauec@hhu.de";
+UPDATE Autor Set Preis = 12.00 WHERE EMail = "lameh@hhu.de";
+UPDATE Autor Set Preis = 15.00 WHERE EMail = "kleini@hhu.de";
